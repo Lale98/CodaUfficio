@@ -1,10 +1,9 @@
-const express = require("express");
-const os = require("os");
+﻿const express = require("express");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || "0.0.0.0";
+const PORT = process.env.PORT || 6666;
+const HOST = process.env.HOST || "127.0.0.1";
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -196,11 +195,7 @@ app.delete("/api/sound/:name", (req, res) => {
 
 app.listen(PORT, HOST, () => {
   console.log(`CodaUfficio avviato su http://localhost:${PORT}`);
-  const interfaces = os.networkInterfaces();
-  Object.values(interfaces)
-    .flat()
-    .filter((i) => i && i.family === "IPv4" && !i.internal)
-    .forEach((i) => {
-      console.log(`Rete locale: http://${i.address}:${PORT}`);
-    });
 });
+
+
+
