@@ -1,0 +1,13 @@
+services:
+  coda-ufficio:
+    container_name: coda-ufficio
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "6666:6666"
+    environment:
+      PORT: "6666"
+      HOST: "0.0.0.0"
+      NODE_ENV: "production"
+    restart: unless-stopped
