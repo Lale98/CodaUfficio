@@ -2,8 +2,8 @@
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 6666;
-const HOST = process.env.HOST || "127.0.0.1";
+const PORT = process.env.PORT || 2323;
+const HOST = process.env.HOST || "0.0.0.0";
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -196,6 +196,7 @@ app.delete("/api/sound/:name", (req, res) => {
 app.listen(PORT, HOST, () => {
   console.log(`CodaUfficio avviato su http://localhost:${PORT}`);
 });
+
 
 
 
