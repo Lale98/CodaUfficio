@@ -18,9 +18,11 @@ function applyDisplayLayout(userCount) {
   const columns = Math.max(1, Math.min(safeCount, maxColumnsByWidth));
   const rows = Math.ceil(safeCount / columns);
   const scale = Math.max(0.72, Math.min(1, 1 - (rows - 1) * 0.14));
+  const maxCardHeight = Math.round(Math.max(130, Math.min(220, 220 - (rows - 1) * 10)));
 
   peopleContainer.style.setProperty("--display-columns", String(columns));
   peopleContainer.style.setProperty("--display-card-scale", scale.toFixed(3));
+  peopleContainer.style.setProperty("--display-card-max-height", `${maxCardHeight}px`);
 }
 
 function userCard(user) {

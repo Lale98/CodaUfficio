@@ -136,6 +136,7 @@ h1 {
 .display-only .people {
   --display-columns: 2;
   --display-card-scale: 1;
+  --display-card-max-height: 220px;
   grid-template-columns: repeat(var(--display-columns), minmax(260px, 1fr));
   grid-auto-rows: minmax(0, 1fr);
   gap: 16px;
@@ -154,6 +155,9 @@ h1 {
   flex-direction: column;
   justify-content: center;
   min-height: 0;
+  height: min(100%, var(--display-card-max-height));
+  max-height: var(--display-card-max-height);
+  align-self: center;
 }
 
 .display-only .dot {
