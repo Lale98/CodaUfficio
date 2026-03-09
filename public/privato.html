@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coda Ufficio - Privato</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1 id="privatoTitle">Gestione collega</h1>
+      <section class="people" id="people"></section>
+      <section class="controls">
+        <h2>Stato</h2>
+        <div class="row">
+          <button data-action="status" data-status="libero">Imposta libero</button>
+          <button data-action="status" data-status="occupato">Imposta occupato</button>
+        </div>
+
+        <h2>Coda personale</h2>
+        <div class="row">
+          <button data-action="increment">Avanza numero</button>
+          <button data-action="decrement">Torna indietro (-1)</button>
+        </div>
+        <p id="pageStatus"></p>
+      </section>
+    </main>
+
+    <script src="privato.js"></script>
+  </body>
+</html>

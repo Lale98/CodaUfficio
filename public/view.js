@@ -1,19 +1,10 @@
 const peopleContainer = document.getElementById("people");
-const audioByUser = {
-  ivan: new Audio(),
-  antonio: new Audio()
-};
-Object.values(audioByUser).forEach((audio) => {
-  audio.preload = "auto";
-});
+const audioByUser = {};
 
 let lastQueueNumber = null;
 let soundEnabled = true;
 let previousServingByUser = {};
-const lastSoundVersionByUser = {
-  ivan: -1,
-  antonio: -1
-};
+const lastSoundVersionByUser = {};
 
 function userCard(user) {
   const isFree = user.status === "libero";
@@ -28,6 +19,26 @@ function userCard(user) {
   `;
 }
 
+function ensureAudio(userKey) {
+  if (!audioByUser[userKey]) {
+    const audio = new Audio();
+    audio.preload = "auto";
+    audioByUser[userKey] = audio;
+    lastSoundVersionByUser[userKey] = -1;
+  }
+  return audioByUser[userKey];
+}
+
+function pruneRemovedUsers(currentUserKeys) {
+  Object.keys(audioByUser).forEach((userKey) => {
+    if (!currentUserKeys.includes(userKey)) {
+      delete audioByUser[userKey];
+      delete lastSoundVersionByUser[userKey];
+      delete previousServingByUser[userKey];
+    }
+  });
+}
+
 async function loadState() {
   const response = await fetch("/api/state");
   if (!response.ok) {
@@ -35,22 +46,24 @@ async function loadState() {
   }
 
   const state = await response.json();
-  const cards = Object.values(state.users)
-    .map((user) => userCard(user))
-    .join("");
+  const userEntries = Object.entries(state.users);
+  const cards = userEntries.map(([, user]) => userCard(user)).join("");
 
   peopleContainer.innerHTML = cards;
 
-  await syncSound(state.sound);
+  const currentUserKeys = userEntries.map(([userKey]) => userKey);
+  pruneRemovedUsers(currentUserKeys);
+
+  await syncSound(state.sound, currentUserKeys);
   playOnQueueAdvance(state);
 }
 
-async function syncSound(soundState) {
+async function syncSound(soundState, userKeys) {
   soundEnabled = Boolean(soundState?.enabled);
 
-  for (const userKey of Object.keys(audioByUser)) {
+  for (const userKey of userKeys) {
     const userSoundMeta = soundState?.users?.[userKey];
-    const audio = audioByUser[userKey];
+    const audio = ensureAudio(userKey);
     if (!userSoundMeta?.configured) {
       audio.removeAttribute("src");
       lastSoundVersionByUser[userKey] = userSoundMeta?.version ?? -1;

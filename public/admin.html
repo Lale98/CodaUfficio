@@ -13,40 +13,22 @@
       <section class="people" id="people"></section>
 
       <section class="controls">
-        <h2>Stato colleghi</h2>
+        <h2>Configura colleghi</h2>
         <div class="row">
-          <button data-action="status" data-name="ivan" data-status="libero">Ivan libero</button>
-          <button data-action="status" data-name="ivan" data-status="occupato">Ivan occupato</button>
+          <input id="newColleagueName" type="text" placeholder="Nome collega" />
+          <button data-action="add-user">Aggiungi collega</button>
         </div>
-        <div class="row">
-          <button data-action="status" data-name="antonio" data-status="libero">Antonio libero</button>
-          <button data-action="status" data-name="antonio" data-status="occupato">Antonio occupato</button>
-        </div>
+        <p id="newColleagueStatus"></p>
 
-        <h2>Avanzamento numeri (coda unica)</h2>
+        <h2>Gestione colleghi</h2>
+        <div id="usersControls" class="users-controls"></div>
+
+        <h2>Coda globale</h2>
         <div class="row">
-          <button data-action="increment" data-name="ivan">Avanza Ivan</button>
-          <button data-action="decrement" data-name="ivan">Ivan -1</button>
-          <button data-action="increment" data-name="antonio">Avanza Antonio</button>
-          <button data-action="decrement" data-name="antonio">Antonio -1</button>
           <button data-action="queue-reset">Reset coda (0)</button>
         </div>
 
-        <h2>Suono avanzamento</h2>
-        <div class="row">
-          <strong>Ivan</strong>
-          <input id="soundFileIvan" type="file" accept=".mp3,audio/mpeg" />
-          <button data-action="sound-upload" data-name="ivan">Carica MP3 Ivan</button>
-          <button data-action="sound-clear" data-name="ivan">Rimuovi suono Ivan</button>
-        </div>
-        <p id="soundStatusIvan"></p>
-        <div class="row">
-          <strong>Antonio</strong>
-          <input id="soundFileAntonio" type="file" accept=".mp3,audio/mpeg" />
-          <button data-action="sound-upload" data-name="antonio">Carica MP3 Antonio</button>
-          <button data-action="sound-clear" data-name="antonio">Rimuovi suono Antonio</button>
-        </div>
-        <p id="soundStatusAntonio"></p>
+        <h2>Suono avanzamento globale</h2>
         <div class="row">
           <button data-action="sound-enable">Abilita suono</button>
           <button data-action="sound-disable">Disabilita suono</button>

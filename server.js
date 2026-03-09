@@ -23,6 +23,10 @@ const store = {
   }
 };
 
+function createEmptySoundState() {
+  return { dataUrl: null, version: 0 };
+}
+
 function syncQueueFromUsers() {
   store.queueNumber = Math.max(
     0,
@@ -32,6 +36,16 @@ function syncQueueFromUsers() {
 
 function normalizeName(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function createUserKey(name) {
+  return String(name || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function normalizeStatus(value) {
@@ -73,6 +87,47 @@ app.post("/api/sound/enabled", (req, res) => {
 
   store.sound.enabled = enabled;
   return res.json({ ok: true, enabled: store.sound.enabled });
+});
+
+app.post("/api/users", (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  const key = createUserKey(name);
+
+  if (!name) {
+    return res.status(400).json({ error: "Nome collega obbligatorio" });
+  }
+
+  if (!key) {
+    return res.status(400).json({ error: "Nome collega non valido" });
+  }
+
+  if (store.users[key]) {
+    return res.status(409).json({ error: "Collega gia esistente" });
+  }
+
+  store.users[key] = { name, status: "libero", servingNumber: 0 };
+  store.sound.users[key] = createEmptySoundState();
+
+  return res.status(201).json({
+    ok: true,
+    key,
+    user: store.users[key]
+  });
+});
+
+app.delete("/api/users/:name", (req, res) => {
+  const userKey = normalizeName(req.params.name);
+  const user = store.users[userKey];
+
+  if (!user) {
+    return res.status(404).json({ error: "Utente non trovato" });
+  }
+
+  delete store.users[userKey];
+  delete store.sound.users[userKey];
+  syncQueueFromUsers();
+
+  return res.json({ ok: true, removed: userKey, queueNumber: store.queueNumber });
 });
 
 app.get("/api/sound/:name", (req, res) => {
