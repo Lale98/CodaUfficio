@@ -12,11 +12,12 @@ function applyDisplayLayout(userCount) {
   }
 
   const safeCount = Math.max(1, userCount);
-  const viewportRatio = window.innerWidth / Math.max(window.innerHeight, 1);
-  const suggestedColumns = Math.ceil(Math.sqrt(safeCount * viewportRatio));
-  const columns = Math.max(1, Math.min(safeCount, suggestedColumns));
+  const viewportWidth = Math.max(window.innerWidth, 320);
+  const minColumnWidth = viewportWidth >= 1200 ? 380 : viewportWidth >= 900 ? 320 : 240;
+  const maxColumnsByWidth = Math.max(1, Math.floor((viewportWidth - 48) / minColumnWidth));
+  const columns = Math.max(1, Math.min(safeCount, maxColumnsByWidth));
   const rows = Math.ceil(safeCount / columns);
-  const scale = Math.max(0.38, Math.min(1, 1 - (rows - 1) * 0.2));
+  const scale = Math.max(0.72, Math.min(1, 1 - (rows - 1) * 0.14));
 
   peopleContainer.style.setProperty("--display-columns", String(columns));
   peopleContainer.style.setProperty("--display-card-scale", scale.toFixed(3));
