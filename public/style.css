@@ -153,11 +153,11 @@ h1 {
   box-shadow: 0 10px 28px rgba(36, 62, 105, 0.09);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 0;
   height: min(100%, var(--display-card-max-height));
   max-height: var(--display-card-max-height);
-  align-self: center;
+  align-self: start;
 }
 
 .display-only .dot {
