@@ -6,6 +6,22 @@ let soundEnabled = true;
 let previousServingByUser = {};
 const lastSoundVersionByUser = {};
 
+function applyDisplayLayout(userCount) {
+  if (!peopleContainer) {
+    return;
+  }
+
+  const safeCount = Math.max(1, userCount);
+  const viewportRatio = window.innerWidth / Math.max(window.innerHeight, 1);
+  const suggestedColumns = Math.ceil(Math.sqrt(safeCount * viewportRatio));
+  const columns = Math.max(1, Math.min(safeCount, suggestedColumns));
+  const rows = Math.ceil(safeCount / columns);
+  const scale = Math.max(0.38, Math.min(1, 1 - (rows - 1) * 0.2));
+
+  peopleContainer.style.setProperty("--display-columns", String(columns));
+  peopleContainer.style.setProperty("--display-card-scale", scale.toFixed(3));
+}
+
 function userCard(user) {
   const isFree = user.status === "libero";
   return `
@@ -50,6 +66,7 @@ async function loadState() {
   const cards = userEntries.map(([, user]) => userCard(user)).join("");
 
   peopleContainer.innerHTML = cards;
+  applyDisplayLayout(userEntries.length);
 
   const currentUserKeys = userEntries.map(([userKey]) => userKey);
   pruneRemovedUsers(currentUserKeys);
@@ -114,3 +131,6 @@ function playOnQueueAdvance(state) {
 
 loadState();
 setInterval(loadState, 2000);
+window.addEventListener("resize", () => {
+  applyDisplayLayout(peopleContainer?.children?.length || 1);
+});
