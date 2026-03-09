@@ -12,13 +12,16 @@ function applyDisplayLayout(userCount) {
   }
 
   const safeCount = Math.max(1, userCount);
-  const viewportWidth = Math.max(window.innerWidth, 320);
+  const containerWidth = Math.max(
+    peopleContainer.clientWidth || peopleContainer.parentElement?.clientWidth || window.innerWidth,
+    320
+  );
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  const minColumnWidth = isPortrait ? 280 : viewportWidth >= 1200 ? 380 : 320;
+  const minColumnWidth = isPortrait ? 280 : containerWidth >= 1200 ? 380 : 320;
   const columnGap = isPortrait ? 12 : 16;
   const maxColumnsByWidth = Math.max(
     1,
-    Math.floor((viewportWidth + columnGap - 48) / (minColumnWidth + columnGap))
+    Math.floor((containerWidth + columnGap) / (minColumnWidth + columnGap))
   );
   const columns = Math.max(1, Math.min(safeCount, maxColumnsByWidth));
   const rows = Math.ceil(safeCount / columns);
